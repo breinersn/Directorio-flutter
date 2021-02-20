@@ -2,7 +2,45 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-class HomePage extends StatelessWidget {
+import 'dart:async';
+
+import 'package:flutter/services.dart';
+import 'package:flutter_open_whatsapp/flutter_open_whatsapp.dart';
+
+class HomePage extends StatefulWidget {
+  @override
+  _HomePageState createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  String _platformVersion = 'Unknown';
+
+  @override
+  void initState() {
+    super.initState();
+    initPlatformState();
+  }
+
+  // Platform messages are asynchronous, so we initialize in an async method.
+  Future<void> initPlatformState() async {
+    String platformVersion;
+    // Platform messages may fail, so we use a try/catch PlatformException.
+    try {
+      platformVersion = await FlutterOpenWhatsapp.platformVersion;
+    } on PlatformException {
+      platformVersion = 'Failed to get platform version.';
+    }
+
+    // If the widget was removed from the tree while the asynchronous platform
+    // message was in flight, we want to discard the reply rather than calling
+    // setState to update our non-existent appearance.
+    if (!mounted) return;
+
+    setState(() {
+      _platformVersion = platformVersion;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     // double height = MediaQuery.of(context).size.height;
@@ -222,14 +260,17 @@ Widget icono(String ico) {
         child: Padding(
             padding: const EdgeInsets.only(top: 0.0),
             child: IconButton(
-                // Use the FaIcon Widget + FontAwesomeIcons class for the IconData
-                icon: FaIcon(
-                  FontAwesomeIcons.whatsapp,
-                  color: Colors.green[600],
-                ),
-                onPressed: () {
-                  // whatsAppOpen();
-                })),
+              // Use the FaIcon Widget + FontAwesomeIcons class for the IconData
+              icon: FaIcon(
+                FontAwesomeIcons.whatsapp,
+                color: Colors.green[600],
+              ),
+              onPressed: () {
+                FlutterOpenWhatsapp.sendSingleMessage("+57 3007821086",
+                    "Hola, me e puesto en contacto contigo atravez de la app Directorio!");
+              },
+              // child: Text('Running on: $_platformVersion\n'),
+            )),
       );
       break;
     default:
@@ -285,7 +326,3 @@ Widget texto(String a, String b) {
     default:
   }
 }
-
-// void whatsAppOpen() async {
-//   await FlutterLaunch.launchWathsApp(phone: "3007821086", message: "Hello");
-// }
