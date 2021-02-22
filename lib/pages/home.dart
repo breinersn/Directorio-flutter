@@ -1,3 +1,4 @@
+import 'package:directorio/data/data-usuarios.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -14,6 +15,8 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   String _platformVersion = 'Unknown';
+
+  var dataUser = DatosUser.getData;
 
   @override
   void initState() {
@@ -43,98 +46,110 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    // double height = MediaQuery.of(context).size.height;
+    double height = MediaQuery.of(context).size.height;
     // double width = MediaQuery.of(context).size.width;
 
     return MaterialApp(
-      home: Scaffold(
-        appBar: AppBar(
-          leading: Builder(
-            builder: (BuildContext context) {
-              return IconButton(
-                icon: const Icon(
-                  Icons.menu,
-                  size: 35,
-                ),
-                onPressed: () => print('Menu'),
-              );
-            },
-          ),
-          title: Center(child: Text('Directorio')),
-          actions: <Widget>[
-            IconButton(
-              icon: new Icon(Icons.search, size: 25),
-              onPressed: () => print('Buscanr'),
-            ),
-          ],
-        ),
-        body: Container(
-          padding: EdgeInsets.fromLTRB(10, 10, 10, 0),
-          height: 135,
-          width: double.maxFinite,
-          child: Card(
-            elevation: 5,
-            child: Padding(
-              padding: EdgeInsets.all(7),
-              child: Stack(children: <Widget>[
-                Align(
-                  alignment: Alignment.centerRight,
-                  child: Stack(
-                    children: <Widget>[
-                      Padding(
-                          padding: const EdgeInsets.only(left: 10, top: 5),
-                          child: Column(
-                            children: <Widget>[
-                              Row(
-                                children: <Widget>[
-                                  appIcon(),
-                                  SizedBox(
-                                    height: 10,
-                                  ),
-                                  nameSymbol(),
-                                ],
-                              ),
-                              Padding(
-                                padding:
-                                    const EdgeInsets.only(left: 20, top: 8),
-                                child: Row(
-                                  children: <Widget>[
-                                    icono('phone'),
-                                    texto('telefono', '300 7821086'),
-                                    SizedBox(
-                                      width: 15,
-                                    ),
-                                    //Spacer(),
-                                    icono('torre'),
-                                    texto('torre', '2'),
-                                    SizedBox(
-                                      width: 10,
-                                    ),
-                                    //Spacer(),
-                                    icono('apartamento'),
-                                    texto('apartamento', '201'),
-                                    SizedBox(
-                                      width: 5,
-                                    ),
-                                    icono('whatsapp'),
-                                    // torreApartamentoIcon(),
-                                    // torreApartamento(),
-                                    // SizedBox(
-                                    //   width: 5,
-                                    // ),
-                                    // SizedBox(
-                                    //   width: 5,
-                                    // )
-                                  ],
-                                ),
-                              )
-                            ],
-                          ))
-                    ],
+      debugShowCheckedModeBanner: false,
+      home: Container(
+        child: Scaffold(
+          appBar: AppBar(
+            leading: Builder(
+              builder: (BuildContext context) {
+                return IconButton(
+                  icon: const Icon(
+                    Icons.menu,
+                    size: 35,
                   ),
-                )
-              ]),
+                  onPressed: () => print('Menu'),
+                );
+              },
             ),
+            title: Center(child: Text('Directorio')),
+            actions: <Widget>[
+              IconButton(
+                icon: new Icon(Icons.search, size: 25),
+                onPressed: () => print('Buscanr'),
+              ),
+            ],
+          ),
+          body: Container(
+            padding: EdgeInsets.fromLTRB(10, 10, 10, 0),
+            height: height * 0.875,
+            width: double.maxFinite,
+            child: ListView.builder(
+                itemCount: dataUser.length,
+                itemBuilder: (context, index) {
+                  // print(dataUser);
+                  // child: Container(
+                  return Container(
+                    child: Card(
+                      elevation: 5,
+                      child: Padding(
+                        padding: EdgeInsets.all(7),
+                        child: Stack(children: <Widget>[
+                          Align(
+                            alignment: Alignment.centerRight,
+                            child: Stack(
+                              children: <Widget>[
+                                Padding(
+                                    padding:
+                                        const EdgeInsets.only(left: 10, top: 5),
+                                    child: Column(
+                                      children: <Widget>[
+                                        Row(
+                                          children: <Widget>[
+                                            appIcon(),
+                                            SizedBox(
+                                              height: 10,
+                                            ),
+                                            nameSymbol(
+                                                '${dataUser[index]["nombre"]}',
+                                                '${dataUser[index]["apellidos"]}',
+                                                '${dataUser[index]["oficio"]}'),
+                                          ],
+                                        ),
+                                        Padding(
+                                          padding: const EdgeInsets.only(
+                                              left: 20, top: 8),
+                                          child: Row(
+                                            children: <Widget>[
+                                              icono('phone', ''),
+                                              texto('telefono',
+                                                  '${dataUser[index]["telefono"]}'),
+                                              icono('whatsapp',
+                                                  '${dataUser[index]["telefono"]}'),
+                                              SizedBox(
+                                                width: 5,
+                                              ),
+                                              //Spacer(),
+                                              icono('torre', ''),
+                                              texto('torre',
+                                                  '${dataUser[index]["torre"]}'),
+                                              SizedBox(
+                                                width: 5,
+                                              ),
+                                              //Spacer(),
+                                              icono('apartamento', ''),
+                                              texto('apartamento',
+                                                  '${dataUser[index]["aparamento"]}'),
+                                              // SizedBox(
+                                              //   width: 5,
+                                              // ),
+                                            ],
+                                          ),
+                                        )
+                                      ],
+                                    ))
+                              ],
+                            ),
+                          )
+                        ]),
+                      ),
+                    ),
+                  );
+                  // );
+                }),
           ),
         ),
       ),
@@ -155,17 +170,17 @@ Widget appIcon() {
   );
 }
 
-Widget nameSymbol() {
+Widget nameSymbol(String nombre, String apellidos, String oficio) {
   return Align(
     alignment: Alignment.centerLeft,
     child: RichText(
       text: TextSpan(
-        text: 'Breiner suarez navarro',
+        text: nombre + ' ' + apellidos,
         style: TextStyle(
-            fontWeight: FontWeight.bold, color: Colors.black, fontSize: 20),
+            fontWeight: FontWeight.w500, color: Colors.black, fontSize: 20),
         children: <TextSpan>[
           TextSpan(
-              text: '\nIngeniero de Sistemas',
+              text: '\n$oficio',
               style: TextStyle(
                   color: Colors.grey,
                   fontSize: 15,
@@ -210,7 +225,7 @@ Widget nameSymbol() {
 //   );
 // }
 
-Widget icono(String ico) {
+Widget icono(String ico, String numero) {
   switch (ico) {
     case 'phone':
       return Align(
@@ -219,7 +234,7 @@ Widget icono(String ico) {
           padding: const EdgeInsets.only(top: 0.0),
           child: Icon(
             Icons.phone,
-            color: Colors.grey[500],
+            color: Colors.green[600],
             size: 18,
           ),
         ),
@@ -264,9 +279,10 @@ Widget icono(String ico) {
               icon: FaIcon(
                 FontAwesomeIcons.whatsapp,
                 color: Colors.green[600],
+                size: 18,
               ),
               onPressed: () {
-                FlutterOpenWhatsapp.sendSingleMessage("+57 3007821086",
+                FlutterOpenWhatsapp.sendSingleMessage("+57 $numero",
                     "Hola, me e puesto en contacto contigo atravez de la app Directorio!");
               },
               // child: Text('Running on: $_platformVersion\n'),

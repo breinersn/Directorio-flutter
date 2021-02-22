@@ -7,7 +7,7 @@ class RegisterPage extends StatelessWidget {
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
-    double taImg = 0.4;
+    double tamImg = 0.4;
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
@@ -17,7 +17,7 @@ class RegisterPage extends StatelessWidget {
           padding: const EdgeInsets.only(top: 35),
           child: Column(
             children: <Widget>[
-              logo(context, height, width, taImg),
+              logo(context, height, width, tamImg),
               //_form(context, height, width),
               _Form(),
               _Labels(context, height, width)
@@ -41,6 +41,7 @@ class __FormState extends State<_Form> {
   final apellidosCtrl = TextEditingController();
   final idCtrl = TextEditingController();
   final telefonoCtrl = TextEditingController();
+  final matriculaCtrl = TextEditingController();
   final torreCtrl = TextEditingController();
   final apartamentoCtrl = TextEditingController();
   final profecionCtrl = TextEditingController();
@@ -205,6 +206,31 @@ class __FormState extends State<_Form> {
                 validator: (String value) {
                   if (value.length < 1) {
                     return 'Ingrese el numero de la torre en la que vive';
+                  }
+                  return null;
+                },
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: TextFormField(
+                controller: matriculaCtrl,
+                keyboardType: TextInputType.number,
+                decoration: InputDecoration(
+                  prefixIcon: Icon(Icons.memory),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(20.0),
+                  ),
+                  // border: InputBorder.none,
+                  hintText: 'Matricula',
+                  // icon: Icon(
+                  //   Icons.mail_outline,
+                  //   color: Colors.grey,
+                  // ),
+                ),
+                validator: (String value) {
+                  if (value.length < 1) {
+                    return 'Ingrese un numero de matricula valido';
                   }
                   return null;
                 },
