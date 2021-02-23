@@ -1,4 +1,6 @@
+import 'package:directorio/widgets/alert.dart';
 import 'package:directorio/widgets/logo.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:validators/validators.dart';
 
@@ -120,14 +122,30 @@ class MyCustomFormState extends State<MyCustomForm> {
                       if (_formKey.currentState.validate()) {
                         // If the form is valid, display a Snackbar.
 
-                        print(emailCtrl.text);
-                        print(passCtrl.text);
+                        if (emailCtrl.text == 'prueba@gmail.com' &&
+                            passCtrl.text == '1234567') {
+                          Navigator.pushNamed(context, 'home');
+                        } else {
+                          alertas(context, 'error', 'Datos Incorrectos',
+                              'Ingrese usuario y contraseña.');
+                          // print(emailCtrl.text);
+                          // print(passCtrl.text);
 
-                        Scaffold.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text('Processing Data'),
-                          ),
-                        );
+                          // Scaffold.of(context).showSnackBar(
+                          //   SnackBar(
+                          //     // elevation: 20,
+                          //     content: Center(
+
+                          //         child: Text('Datos ingresados no validos!')),
+                          //   ),
+                          // );
+                        }
+
+                        // Scaffold.of(context).showSnackBar(
+                        //   SnackBar(
+                        //     content: Text('Processing Data'),
+                        //   ),
+                        // );
                       }
                     },
                     child: Container(
@@ -157,10 +175,10 @@ Widget _labels(BuildContext context, double height, double width) {
       children: <Widget>[
         FlatButton(
           onPressed: () {
-            Navigator.pushNamed(context, 'home');
+            // Navigator.pushNamed(context, 'home');
           },
           child: Text(
-            'Olvide mi contraseña(home temporal)',
+            'Olvide mi contraseña',
             style: TextStyle(
                 color: Colors.blue[400],
                 fontSize: 17,

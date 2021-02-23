@@ -4,9 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import 'dart:async';
-
 import 'package:flutter/services.dart';
 import 'package:flutter_open_whatsapp/flutter_open_whatsapp.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -15,7 +15,6 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   String _platformVersion = 'Unknown';
-
   var dataUser = DatosUser.getData;
 
   @override
@@ -94,7 +93,7 @@ class _HomePageState extends State<HomePage> {
                               children: <Widget>[
                                 Padding(
                                     padding:
-                                        const EdgeInsets.only(left: 10, top: 5),
+                                        const EdgeInsets.only(left: 3, top: 5),
                                     child: Column(
                                       children: <Widget>[
                                         Row(
@@ -111,16 +110,17 @@ class _HomePageState extends State<HomePage> {
                                         ),
                                         Padding(
                                           padding: const EdgeInsets.only(
-                                              left: 20, top: 8),
+                                              left: 5, top: 0),
                                           child: Row(
                                             children: <Widget>[
-                                              icono('phone', ''),
+                                              icono('phone',
+                                                  '${dataUser[index]["telefono"]}'),
                                               texto('telefono',
                                                   '${dataUser[index]["telefono"]}'),
                                               icono('whatsapp',
                                                   '${dataUser[index]["telefono"]}'),
                                               SizedBox(
-                                                width: 5,
+                                                width: 4,
                                               ),
                                               //Spacer(),
                                               icono('torre', ''),
@@ -164,7 +164,7 @@ Widget appIcon() {
         alignment: Alignment.centerLeft,
         child: Icon(
           Icons.account_circle_rounded,
-          color: Colors.amber,
+          color: Colors.amber[200],
           size: 40,
         )),
   );
@@ -191,51 +191,22 @@ Widget nameSymbol(String nombre, String apellidos, String oficio) {
   );
 }
 
-// Widget torreApartamento() {
-//   return Align(
-//     alignment: Alignment.topRight,
-//     child: Padding(
-//       padding: const EdgeInsets.only(left: 20.0),
-//       child: Row(
-//         children: <Widget>[
-//           RichText(
-//             textAlign: TextAlign.left,
-//             text: TextSpan(
-//               text: '\n\Torre: 2:',
-//               style: TextStyle(
-//                 color: Colors.grey,
-//                 fontSize: 15,
-//                 fontWeight: FontWeight.w400,
-//               ),
-//               children: <TextSpan>[
-//                 TextSpan(
-//                     text: '\nApto 202',
-//                     style: TextStyle(
-//                       color: Colors.grey,
-//                       fontStyle: FontStyle.italic,
-//                       fontSize: 15,
-//                       fontWeight: FontWeight.w400,
-//                     )),
-//               ],
-//             ),
-//           ),
-//         ],
-//       ),
-//     ),
-//   );
-// }
-
-Widget icono(String ico, String numero) {
-  switch (ico) {
+icono(String icono, String numero) {
+  switch (icono) {
     case 'phone':
       return Align(
         alignment: Alignment.topRight,
         child: Padding(
           padding: const EdgeInsets.only(top: 0.0),
-          child: Icon(
-            Icons.phone,
-            color: Colors.green[600],
-            size: 18,
+          child: IconButton(
+            icon: Icon(
+              Icons.phone,
+              color: Colors.green[600],
+              size: 18,
+            ),
+            onPressed: () {
+              _callPhone(numero);
+            },
           ),
         ),
       );
@@ -293,19 +264,24 @@ Widget icono(String ico, String numero) {
   }
 }
 
-Widget texto(String a, String b) {
-  switch (a) {
+texto(String item, String parametro) {
+  switch (item) {
     case 'telefono':
       return Align(
         alignment: Alignment.topLeft,
         child: Padding(
           padding: const EdgeInsets.only(left: 3.0, top: 0),
-          child: Text(b,
-              style: TextStyle(
-                color: Colors.grey,
-                fontSize: 15,
-                fontWeight: FontWeight.w300,
-              )),
+          child: TextButton(
+            onPressed: () {
+              _callPhone(parametro);
+            },
+            child: Text(parametro,
+                style: TextStyle(
+                  color: Colors.grey,
+                  fontSize: 15,
+                  fontWeight: FontWeight.w300,
+                )),
+          ),
         ),
       );
       break;
@@ -314,7 +290,7 @@ Widget texto(String a, String b) {
         alignment: Alignment.topLeft,
         child: Padding(
           padding: const EdgeInsets.only(left: 3.0, top: 0),
-          child: Text(b,
+          child: Text(parametro,
               style: TextStyle(
                 color: Colors.grey,
                 fontSize: 15,
@@ -329,7 +305,7 @@ Widget texto(String a, String b) {
         alignment: Alignment.topLeft,
         child: Padding(
           padding: const EdgeInsets.only(left: 3.0, top: 0),
-          child: Text(b,
+          child: Text(parametro,
               style: TextStyle(
                 color: Colors.grey,
                 fontSize: 15,
@@ -340,5 +316,14 @@ Widget texto(String a, String b) {
       break;
 
     default:
+  }
+}
+
+Future<void> _callPhone(String numero) async {
+  var url = 'tel://$numero';
+  if (await canLaunch(url)) {
+    await launch(url);
+  } else {
+    throw 'Could not launch $url';
   }
 }
